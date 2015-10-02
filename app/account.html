@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+<html ng-app="urlShortener">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    <script src="Chart.js"></script>
+
+
+    <title>squiz.it</title>
+    <!--Set up and load controllers -->
+    <script src="../bower_components/angular/angular.js"></script>
+    <script src="scripts/app.js"></script>
+    <script src="scripts/controllers/shortenCtrl.js"></script>
+    <script src="scripts/controllers/userCtrl.js"></script>
+    <script src="scripts/controllers/statCtrl.js"></script>
+    <script src="scripts/chart/Chart.js"></script>
+    <script src="scripts/chart/angular-chart.js"></script>
+
+    <!-- Styles -->
+    <link href="styles/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles/bootstrap/jumbotron.css" rel="stylesheet">
+    <link href="styles/imageStyle.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles/angular-chart.css">
+</head>
+
+<body ng-controller="userCtrl" data-ng-init="accountInit()">
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand">squiz.it</a>
+        </div>
+
+        <div class="navbar-right">
+            <a class="navbar-brand">{{username}}</a>
+            <form class="navbar-form navbar-right">
+                <button type="submit" class="btn btn-success" ng-click="logout()">Logout</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="jumbotron">
+    <div class="container">
+        <h1>
+            Your SQUIZ!
+        </h1>
+
+        <div ng-controller="shortenCtrl" id="shortenCtrlDiv">
+            <form>
+                <input type="text" placeholder="Insert you long url here..." class="form-control" ng-model="longUrl">
+                <br>
+                <button type="submit" class="btn btn-primary btn-lg" ng-click="letsShortenIt()">Let's shorten it! &raquo;</button>
+            </form>
+
+            <div id="customizeForm">
+                <p>
+                    {{msg}} {{domain}} {{shortUrl}} <br>
+                    {{customizeMsg}}
+                </p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!--STATISTICHE-->
+<div class="container">
+    <h3 class="sub-header">GLOBAL STAT</h3>
+    <ul>
+        <li>Total shorteners: {{totalShorteners}}</li>
+        <li>Total click: {{totalClick}}</li>
+    </ul>
+
+    <canvas id="line" class="chart chart-line" chart-data="dataTime"
+            chart-labels="labelsTime" chart-legend="false" chart-series="seriesTime"
+            chart-click="onClick" >
+    </canvas>
+
+    <h3 class="sub-header">HISTORY</h3>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Data</th>
+                <th>Short Url</th>
+                <th>Long Url</th>
+                <th>Click</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr ng-repeat="record in records">
+                <td>{{record.data}}</td>
+                <td><a href={{record.shortUrl}}>{{record.shortUrl}}</a></td>
+                <td><a href={{record.longUrl}}>{{record.longUrl}}</a></td>
+                <td>{{record.click}}</td>
+                <td>
+                    <button type="submit" class="btn btn-success" ng-click="showContinentClick(record.shortUrl)">Details</button>
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+    <div id="singleUrlStat">
+        <h3 class="sub-header">DETAILS</h3>
+        <h4>{{selectedUrl}}</h4>
+
+        <div class="continentStat">
+            <div class="table-responsive">
+                <table class="table table-striped">
+
+                    <thead id="continentHead">
+                    </thead>
+
+                    <tbody>
+                        <tr ng-repeat="continent in continentList">
+                            <td>{{continent.name}}</td>
+                            <td>{{continent.click}}</td>
+                            <td>
+                                <button type="submit" class="btn btn-success" ng-click="showCountryClick(continent.name)">More</button>
+                            </td>
+                        </tr>
+                    </tbody>
+
+                    {{detailsMsg}}
+                </table>
+            </div>
+        </div>
+
+        <div class="countryStat">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead id="countryHead">
+
+                    </thead>
+
+                    <tbody>
+                    <tr ng-repeat="country in countryList">
+                        <td>{{country.name}}</td>
+                        <td>{{country.click}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<canvas id="doughnut" class="chart chart-doughnut" chart-data="data" chart-labels="labels"></canvas>
+
+<div class="container">
+    <footer>
+        <p>&copy; SquizTeam 2015</p>
+    </footer>
+</div> <!-- /container -->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="../../dist/js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+</body>
+</html>
